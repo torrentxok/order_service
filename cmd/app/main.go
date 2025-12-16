@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/torrentxok/order_service/internal/config"
+	"github.com/torrentxok/order_service/internal/logger"
 )
 
 func main() {
@@ -12,5 +13,10 @@ func main() {
 		log.Fatal("config: ", err)
 	}
 
+	logger, err := logger.New("debug")
+	if err != nil {
+		panic(err)
+	}
+	defer logger.Sync()
 	log.Printf("Config loaded: %+v\n", cfg)
 }
