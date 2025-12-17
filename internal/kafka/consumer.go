@@ -7,6 +7,7 @@ import (
 
 	"github.com/segmentio/kafka-go"
 	"github.com/torrentxok/order_service/internal/models"
+	"github.com/torrentxok/order_service/internal/service"
 	"go.uber.org/zap"
 )
 
@@ -52,7 +53,6 @@ func (c *Consumer) Run(ctx context.Context) error {
 }
 
 func (c *Consumer) handleMessage(ctx context.Context, msg kafka.Message) error {
-	// логирование
 
 	var order models.Order
 	if err := json.Unmarshal(msg.Value, &order); err != nil {

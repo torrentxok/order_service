@@ -42,12 +42,33 @@ func (s *OrderService) CreateOrder(ctx context.Context, order *models.Order) err
 	return nil
 }
 
-// загружаем при запуске в кэш
 func (s *OrderService) WarmUpCache(ctx context.Context) error {
+	orders, err := s.repo.GetLastOrders(ctx, s.cache.Capacity())
+	if err != nil {
+		return err
+	}
+
+	for _, order := range orders {
+		s.cache.Set(order.OrderUID, order)
+	}
+
+	s.logger.Info("cache warmed up", zap.Int("count", len(orders)))
 	return nil
 }
 
 // получить запись
 func (s *OrderService) GetOrder(ctx context.Context, orderUID string) (*models.Order, error) {
-	return nil, nil
+	if order, ok := s.cache.Get(orderUID); ok {
+		s.logger.Debug("order found in cache", zap.String("order_uid", orderUID))
+		return order, nil
+	}
+
+	order, err := s.repo.GetOrder(ctx, orderUID)
+	if err != nil {
+		return nil, err
+	}
+
+	s.cache.Set(orderUID, order)
+
+	return order, nil
 }

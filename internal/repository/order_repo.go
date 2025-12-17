@@ -273,3 +273,38 @@ func (r *OrderRepo) Exists(ctx context.Context, orderUID string) (bool, error) {
 
 	return exists, err
 }
+
+func (r *OrderRepo) GetLastOrders(ctx context.Context, limit int) ([]*models.Order, error) {
+	query := `
+		SELECT order_uid
+		FROM orders
+		ORDER BY date_created DESC
+		LIMIT $1
+	`
+
+	rows, err := r.db.QueryContext(ctx, query, limit)
+	if err != nil {
+		r.logger.Error("failed to get last orders uids", zap.Error(err))
+		return nil, err
+	}
+	defer rows.Close()
+
+	var orders []*models.Order
+
+	for rows.Next() {
+		var orderUID string
+
+		if err = rows.Scan(&orderUID); err != nil {
+			return nil, err
+		}
+
+		order, err := r.GetOrder(ctx, orderUID)
+		if err != nil {
+			return nil, err
+		}
+
+		orders = append(orders, order)
+	}
+
+	return orders, nil
+}
