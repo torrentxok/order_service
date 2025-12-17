@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/torrentxok/order_service/internal/cache"
 	"github.com/torrentxok/order_service/internal/models"
 	"github.com/torrentxok/order_service/internal/repository"
 	"go.uber.org/zap"
@@ -36,7 +37,17 @@ func (s *OrderService) CreateOrder(ctx context.Context, order *models.Order) err
 		return err
 	}
 
-	//s.cache.Set(order.OrderUID, order)
+	s.cache.Set(order.OrderUID, order)
 
 	return nil
+}
+
+// загружаем при запуске в кэш
+func (s *OrderService) WarmUpCache(ctx context.Context) error {
+	return nil
+}
+
+// получить запись
+func (s *OrderService) GetOrder(ctx context.Context, orderUID string) (*models.Order, error) {
+	return nil, nil
 }
