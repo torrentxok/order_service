@@ -30,7 +30,7 @@ type KafkaConfig struct {
 }
 
 type ServerConfig struct {
-	Port int
+	Port string
 }
 
 type CacheConfig struct {
@@ -58,10 +58,7 @@ func LoadConfig() (*Config, error) {
 	cfg.Kafka.Topic = getEnv("KAFKA_TOPIC", "orders")
 	cfg.Kafka.GroupID = getEnv("KAFKA_GROUP", "order_service")
 
-	cfg.Server.Port, err = getEnvAsInt("SERVER_PORT", 8080)
-	if err != nil {
-		return nil, err
-	}
+	cfg.Server.Port = getEnv("SERVER_PORT", "8080")
 
 	cfg.Cache.Size, err = getEnvAsInt("CACHE_SIZE", 100)
 	if err != nil {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/torrentxok/order_service/internal/config"
@@ -25,7 +26,24 @@ func NewRepository(cfg config.DBConfig, logger *zap.Logger) (*OrderRepo, error) 
 	if err != nil {
 		return nil, err
 	}
-	return &OrderRepo{db: db, logger: logger}, nil
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := db.PingContext(ctx); err != nil {
+		return nil, fmt.Errorf("db ping failed: %w", err)
+	}
+
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(25)
+	db.SetConnMaxLifetime(5 * time.Minute)
+
+	logger.Info("database connected")
+
+	return &OrderRepo{
+		db:     db,
+		logger: logger,
+	}, nil
 }
 
 func (r *OrderRepo) CreateOrder(ctx context.Context, o *models.Order) error {
@@ -307,4 +325,8 @@ func (r *OrderRepo) GetLastOrders(ctx context.Context, limit int) ([]*models.Ord
 	}
 
 	return orders, nil
+}
+
+func (r *OrderRepo) Close() error {
+	return r.db.Close()
 }

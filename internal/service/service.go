@@ -2,12 +2,15 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/torrentxok/order_service/internal/cache"
 	"github.com/torrentxok/order_service/internal/models"
 	"github.com/torrentxok/order_service/internal/repository"
 	"go.uber.org/zap"
 )
+
+var ErrOrderNotFound = errors.New("order not found")
 
 type OrderService struct {
 	repo   repository.OrderRepository

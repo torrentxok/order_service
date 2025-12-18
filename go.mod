@@ -3,6 +3,7 @@ module github.com/torrentxok/order_service
 go 1.25.4
 
 require (
+	github.com/go-chi/chi/v5 v5.2.3 // indirect
 	github.com/jmoiron/sqlx v1.4.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
