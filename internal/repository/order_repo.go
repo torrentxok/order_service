@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"github.com/torrentxok/order_service/internal/config"
 	"github.com/torrentxok/order_service/internal/models"
 	"go.uber.org/zap"
