@@ -50,6 +50,10 @@ func main() {
 
 	orderService := service.NewOrderService(db, orderCache, log)
 
+	if err := orderService.WarmUpCache(ctx); err != nil {
+		log.Warn("failed to warm up cache", zap.Error(err))
+	}
+
 	kafkaReader := kafkago.NewReader(kafkago.ReaderConfig{
 		Brokers: cfg.Kafka.Brokers,
 		Topic:   cfg.Kafka.Topic,
