@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/torrentxok/order_service/internal/models"
 )
@@ -12,3 +13,5 @@ type OrderRepository interface {
 	Exists(ctx context.Context, orderUID string) (bool, error)
 	GetLastOrders(ctx context.Context, limit int) ([]*models.Order, error)
 }
+
+var ErrOrderNotFound = errors.New("order not found")

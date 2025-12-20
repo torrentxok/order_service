@@ -68,6 +68,9 @@ func (s *OrderService) GetOrder(ctx context.Context, orderUID string) (*models.O
 
 	order, err := s.repo.GetOrder(ctx, orderUID)
 	if err != nil {
+		if errors.Is(err, repository.ErrOrderNotFound) {
+			return nil, ErrOrderNotFound
+		}
 		return nil, err
 	}
 

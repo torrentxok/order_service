@@ -3,17 +3,17 @@ package models
 import "errors"
 
 type Item struct {
-	ChrtID      int    `json:"chrt_id"`
-	TrackNumber string `json:"track_number"`
-	Price       int    `json:"price"`
-	Rid         string `json:"rid"`
-	Name        string `json:"name"`
-	Sale        int    `json:"sale"`
-	Size        string `json:"size"`
-	TotalPrice  int    `json:"total_price"`
-	NmID        int    `json:"nm_id"`
-	Brand       string `json:"brand"`
-	Status      int    `json:"status"`
+	ChrtID      int    `db:"chrt_id" json:"chrt_id"`
+	TrackNumber string `db:"track_number" json:"track_number"`
+	Price       int    `db:"price" json:"price"`
+	Rid         string `db:"rid" json:"rid"`
+	Name        string `db:"name" json:"name"`
+	Sale        int    `db:"sale" json:"sale"`
+	Size        string `db:"size" json:"size"`
+	TotalPrice  int    `db:"total_price" json:"total_price"`
+	NmID        int    `db:"nm_id" json:"nm_id"`
+	Brand       string `db:"brand" json:"brand"`
+	Status      int    `db:"status" json:"status"`
 }
 
 func (i *Item) Validate() error {

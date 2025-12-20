@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -146,7 +147,7 @@ func (r *OrderRepo) insertPayment(ctx context.Context, tx *sql.Tx, orderUID stri
 		INSERT INTO payment (
 			order_uid, transaction, request_id, currency, provider, amount,
 			payment_dt, bank, delivery_cost, goods_total, custom_fee
-		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 	`
 
 	_, err := tx.ExecContext(ctx, query,
@@ -217,6 +218,10 @@ func (r *OrderRepo) GetOrder(ctx context.Context, orderUID string) (*models.Orde
 
 	err := r.db.GetContext(ctx, &order, queryOrder, orderUID)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrOrderNotFound
+		}
+
 		r.logger.Error("failed to fetch order", zap.String("order_uid", orderUID), zap.Error(err))
 		return nil, err
 	}

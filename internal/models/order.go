@@ -7,20 +7,20 @@ import (
 )
 
 type Order struct {
-	OrderUID        string   `json:"order_uid"`
-	TrackNumber     string   `json:"track_number"`
-	Entry           string   `json:"entry"`
+	OrderUID        string   `db:"order_uid" json:"order_uid"`
+	TrackNumber     string   `db:"track_number" json:"track_number"`
+	Entry           string   `db:"entry" json:"entry"`
 	Delivery        Delivery `json:"delivery"`
 	Payment         Payment  `json:"payment"`
 	Items           []Item   `json:"items"`
-	Locale          string   `json:"locale"`
-	InternalSig     string   `json:"internal_signature"`
-	CustomerID      string   `json:"customer_id"`
-	DeliveryService string   `json:"delivery_service"`
-	ShardKey        string   `json:"shardkey"`
-	SmID            int      `json:"sm_id"`
-	DateCreated     string   `json:"date_created"`
-	OofShard        string   `json:"oof_shard"`
+	Locale          string   `db:"locale" json:"locale"`
+	InternalSig     string   `db:"internal_signature" json:"internal_signature"`
+	CustomerID      string   `db:"customer_id" json:"customer_id"`
+	DeliveryService string   `db:"delivery_service" json:"delivery_service"`
+	ShardKey        string   `db:"shardkey" json:"shardkey"`
+	SmID            int      `db:"sm_id" json:"sm_id"`
+	DateCreated     string   `db:"date_created" json:"date_created"`
+	OofShard        string   `db:"oof_shard" json:"oof_shard"`
 }
 
 func (o *Order) Validate() error {

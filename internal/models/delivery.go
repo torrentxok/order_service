@@ -3,13 +3,13 @@ package models
 import "errors"
 
 type Delivery struct {
-	Name    string `json:"name"`
-	Phone   string `json:"phone"`
-	Zip     string `json:"zip"`
-	City    string `json:"city"`
-	Address string `json:"address"`
-	Region  string `json:"region"`
-	Email   string `json:"email"`
+	Name    string `db:"name" json:"name"`
+	Phone   string `db:"phone" json:"phone"`
+	Zip     string `db:"zip" json:"zip"`
+	City    string `db:"city" json:"city"`
+	Address string `db:"address" json:"address"`
+	Region  string `db:"region" json:"region"`
+	Email   string `db:"email" json:"email"`
 }
 
 func (d *Delivery) Validate() error {
