@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Поиск заказа</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6f8;
+      margin: 0;
+      padding: 40px;
+    }
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-top: 0;
+    }
+    .form {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    input {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    pre {
+      background: #111;
+      color: #0f0;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    .error {
+      color: #c00;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Поиск заказа</h1>
+
+    <div class="form">
+      <input
+        type="text"
+        id="orderUid"
+        placeholder="Введите order_uid"
+      />
+      <button onclick="getOrder()">Найти</button>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function getOrder() {
+      const orderUid = document.getElementById('orderUid').value.trim();
+      const result = document.getElementById('result');
+
+      if (!orderUid) {
+        result.innerHTML = '<div class="error">Введите order_uid</div>';
+        return;
+      }
+
+      result.innerHTML = 'Загрузка...';
+
+      try {
+        const response = await fetch(`http://localhost:8080/order/${orderUid}`);
+
+        if (response.status === 404) {
+          result.innerHTML = '<div class="error">Заказ не найден</div>';
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error('Ошибка сервера');
+        }
+
+        const data = await response.json();
+        result.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+      } catch (err) {
+        result.innerHTML = `<div class="error">${err.message}</div>`;
+      }
+    }
+  </script>
+</body>
+</html>

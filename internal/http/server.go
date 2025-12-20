@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"github.com/torrentxok/order_service/internal/http/handler"
 	"go.uber.org/zap"
 )
@@ -24,6 +25,15 @@ func NewServer(addr string, orderhandler *handler.OrderHandler, logger *zap.Logg
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(30 * time.Second))
+
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"*"}, // для тестового задания — ок
+		AllowedMethods:   []string{"GET", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Content-Type"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: false,
+		MaxAge:           300,
+	}))
 
 	r.Use(middleware.Logger)
 
